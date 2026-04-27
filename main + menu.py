@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 items = []
 
 # ===== FUNCTIONS =====
@@ -179,4 +179,4 @@ def menu():
 
 # ===== RUN =====
 
->>>>>>> ace27496b142fc2ef76e037bef1bb9e2b47f95ae
+
