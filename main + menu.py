@@ -55,7 +55,7 @@ def load_from_file(items):
 
 def menu():
     while True:
-        print("\n===== WAREHOUSE MANAGEMENT =====")
+        print("\ WAREHOUSE MANAGEMENT \")
         print("1. Add item")
         print("2. Display items")
         print("3. Search item")
