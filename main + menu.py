@@ -1,4 +1,3 @@
-
 items = []
 
 # ===== FUNCTIONS =====
@@ -55,7 +54,7 @@ def load_from_file(items):
 
 def menu():
     while True:
-        print("\ WAREHOUSE MANAGEMENT \")
+        print("WAREHOUSE MANAGEMENT")
         print("1. Add item")
         print("2. Display items")
         print("3. Search item")
@@ -89,92 +88,130 @@ def menu():
 
 # ===== RUN =====
 
-items = []
-
-# ===== FUNCTIONS =====
-
+# ===== ADD ITEM =====
 def add_item(items):
-    name = input("Nhập tên hàng: ")
-    items.append(name)
-    print("Đã thêm!")
+    id = input("Enter ID: ")
+    name = input("Enter name: ")
 
+while True:
+    try:
+        quantity = int(input("Enter quantity: "))
+        if quantity >= 0:
+            break
+        else:
+            print("Quantity must >= 0")
+    except:
+        print("Please enter a valid number")
+
+    while True:
+        try:
+            price = float(input("Enter price: "))
+            if price >= 0:
+                break
+            else:
+                print("Price must >= 0")
+        except:
+            print("Invalid number!")
+
+    items.append({
+        "id": id,
+        "name": name,
+        "quantity": quantity,
+        "price": price
+    })
+
+
+# ===== DISPLAY =====
 def display_items(items):
     if not items:
-        print("Kho trống!")
-    else:
-        print("Danh sách hàng:")
-        for i, item in enumerate(items, 1):
-            print(f"{i}. {item}")
+        print("No data!")
+        return
 
+    print("{:<10} {:<20} {:<10} {:<10}".format("ID", "Name", "Qty", "Price"))
+
+    for item in items:
+        print("{:<10} {:<20} {:<10} {:<10}".format(
+            item["id"], item["name"], item["quantity"], item["price"]
+        ))
+
+
+# ===== SEARCH =====
 def search_item(items):
-    keyword = input("Nhập tên cần tìm: ")
-    found = [item for item in items if keyword.lower() in item.lower()]
-    
-    if found:
-        print("Kết quả tìm kiếm:")
-        for item in found:
-            print(item)
-    else:
-        print("Không tìm thấy!")
+    key = input("Enter ID to search: ")
 
+    for item in items:
+        if item["id"] == key:
+            print("Found:", item)
+            return
+
+    print("Not found!")
+
+
+# ===== SORT =====
 def sort_items(items):
-    items.sort()
-    print("Đã sắp xếp!")
+    if not items:
+        print("No data to sort!")
+        return
 
+    items.sort(key=lambda x: x["quantity"])
+    print("Sorted by quantity!")
+
+
+# ===== STATISTICS =====
 def statistics(items):
-    print(f"Tổng số mặt hàng: {len(items)}")
+    if not items:
+        print("No data!")
+        return
 
+    total_value = 0
+    total_quantity = 0
+
+    for item in items:
+        total_value += item["quantity"] * item["price"]
+        total_quantity += item["quantity"]
+
+    print("Total quantity:", total_quantity)
+    print("Total inventory value:", total_value)
+
+
+# ===== SAVE FILE =====
 def save_to_file(items):
-    with open("data.txt", "w", encoding="utf-8") as f:
+    with open("data.txt", "w") as f:
         for item in items:
-            f.write(item + "\n")
-    print("Đã lưu vào file!")
+            f.write(f"{item['id']},{item['name']},{item['quantity']},{item['price']}\n")
 
-def load_from_file(items):
+    print("Saved to file!")
+
+
+# ===== LOAD FILE =====
+def load_from_file():
+    items = []
     try:
-        with open("data.txt", "r", encoding="utf-8") as f:
-            global items
-            items = [line.strip() for line in f]
-        print("Đã tải dữ liệu!")
-    except FileNotFoundError:
-        print("Chưa có file dữ liệu!")
+        with open("data.txt", "r") as f:
+            for line in f:
+                id, name, quantity, price = line.strip().split(",")
+                items.append({
+                    "id": id,
+                    "name": name,
+                    "quantity": int(quantity),
+                    "price": float(price)
+                })
+        print("Loaded from file!")
+    except:
+        print("File not found!")
 
-# ===== MENU =====
-
-def menu():
-    while True:
-        print("\ WAREHOUSE MANAGEMENT ")
-        print("1. Add item")
-        print("2. Display items")
-        print("3. Search item")
-        print("4. Sort items")
-        print("5. Statistics")
-        print("6. Save to file")
-        print("7. Load from file")
-        print("0. Exit")
-
-        choice = input("Chọn: ")
-
-        if choice == "1":
-            add_item()
-        elif choice == "2":
-            display_items()
-        elif choice == "3":
-            search_item()
-        elif choice == "4":
-            sort_items()
-        elif choice == "5":
-            statistics()
-        elif choice == "6":
-            save_to_file()
-        elif choice == "7":
-            load_from_file()
-        elif choice == "0":
-            print("Thoát chương trình")
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
-
-# ===== RUN =====
+    return items
 
 
+# ===== ADVANCED (tìm gần đúng) =====
+def search_by_name(items):
+    keyword = input("Enter name keyword: ").lower()
+
+    found = False
+    for item in items:
+        if keyword in item["name"].lower():
+            print(item)
+            found = True
+
+    if not found:
+        print("No matching items!")
