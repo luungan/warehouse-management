@@ -185,9 +185,9 @@ def save_to_file(items):
 
 # ===== LOAD FILE =====
 def load_from_file():
-    items = []
     try:
-        with open("data.txt", "r") as f:
+        with open("data.txt", "r", encoding="utf-8") as f:
+            items.clear()
             for line in f:
                 id, name, quantity, price = line.strip().split(",")
                 items.append({
@@ -196,22 +196,45 @@ def load_from_file():
                     "quantity": int(quantity),
                     "price": float(price)
                 })
-        print("Loaded from file!")
-    except:
-        print("File not found!")
+        print("Đã tải dữ liệu!")
+    except FileNotFoundError:
+        print("Không tìm thấy file!")
+# ===== MENU =====
 
-    return items
+def menu():
+    while True:
+        print("\ WAREHOUSE MANAGEMENT ")
+        print("1. Add item")
+        print("2. Display items")
+        print("3. Search item")
+        print("4. Sort items")
+        print("5. Statistics")
+        print("6. Save to file")
+        print("7. Load from file")
+        print("0. Exit")
+
+        choice = input("Chọn: ")
+
+        if choice == "1":
+            add_item()
+        elif choice == "2":
+            display_items()
+        elif choice == "3":
+            search_item()
+        elif choice == "4":
+            sort_items()
+        elif choice == "5":
+            statistics()
+        elif choice == "6":
+            save_to_file()
+        elif choice == "7":
+            load_from_file()
+        elif choice == "0":
+            print("Thoát chương trình")
+            break
+        else:
+            print("Lựa chọn không hợp lệ!")
+
+# ===== RUN =====
 
 
-# ===== ADVANCED (tìm gần đúng) =====
-def search_by_name(items):
-    keyword = input("Enter name keyword: ").lower()
-
-    found = False
-    for item in items:
-        if keyword in item["name"].lower():
-            print(item)
-            found = True
-
-    if not found:
-        print("No matching items!")
