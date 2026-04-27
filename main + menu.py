@@ -139,42 +139,5 @@ def load_from_file(items):
     except FileNotFoundError:
         print("Chưa có file dữ liệu!")
 
-# ===== MENU =====
-
-def menu():
-    while True:
-        print("\ WAREHOUSE MANAGEMENT ")
-        print("1. Add item")
-        print("2. Display items")
-        print("3. Search item")
-        print("4. Sort items")
-        print("5. Statistics")
-        print("6. Save to file")
-        print("7. Load from file")
-        print("0. Exit")
-
-        choice = input("Chọn: ")
-
-        if choice == "1":
-            add_item()
-        elif choice == "2":
-            display_items()
-        elif choice == "3":
-            search_item()
-        elif choice == "4":
-            sort_items()
-        elif choice == "5":
-            statistics()
-        elif choice == "6":
-            save_to_file()
-        elif choice == "7":
-            load_from_file()
-        elif choice == "0":
-            print("Thoát chương trình")
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
-
-# ===== RUN =====
 
 
