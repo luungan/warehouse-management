@@ -1,209 +1,162 @@
 items = []
 
-# ===== FUNCTIONS =====
+# ===== ADD ITEM =====
 
 def add_item(items):
+    item_id = input("Nhập ID: ")
     name = input("Nhập tên hàng: ")
-    items.append(name)
-    print("Đã thêm!")
+
+    while True:
+        try:
+            quantity = int(input("Nhập số lượng: "))
+            if quantity >= 0:
+                break
+            else:
+                print("Số lượng không được âm!")
+        except ValueError:
+            print("Vui lòng nhập số nguyên!")
+
+    while True:
+        try:
+            price = float(input("Nhập giá: "))
+            if price >= 0:
+                break
+            else:
+                print("Giá không được âm!")
+        except ValueError:
+            print("Vui lòng nhập số!")
+
+    item = {
+        "id": item_id,
+        "name": name,
+        "quantity": quantity,
+        "price": price
+    }
+
+    items.append(item)
+    print("Đã thêm mặt hàng!")
+
+
+# ===== DISPLAY ITEMS =====
 
 def display_items(items):
     if not items:
         print("Kho trống!")
-    else:
-        print("Danh sách hàng:")
-        for i, item in enumerate(items, 1):
-            print(f"{i}. {item}")
+        return
+
+    print("\nDanh sách hàng:")
+    print("{:<10} {:<20} {:<10} {:<10}".format("ID", "Tên hàng", "Số lượng", "Giá"))
+
+    for item in items:
+        print("{:<10} {:<20} {:<10} {:<10}".format(
+            item["id"],
+            item["name"],
+            item["quantity"],
+            item["price"]
+        ))
+
+
+# ===== SEARCH ITEM =====
 
 def search_item(items):
-    keyword = input("Nhập tên cần tìm: ")
-    found = [item for item in items if keyword.lower() in item.lower()]
-    
-    if found:
-        print("Kết quả tìm kiếm:")
-        for item in found:
-            print(item)
-    else:
+    keyword = input("Nhập ID hoặc tên hàng cần tìm: ").lower()
+
+    found = []
+
+    for item in items:
+        if keyword in item["id"].lower() or keyword in item["name"].lower():
+            found.append(item)
+
+    if not found:
         print("Không tìm thấy!")
+        return
+
+    print("\nKết quả tìm kiếm:")
+    print("{:<10} {:<20} {:<10} {:<10}".format("ID", "Tên hàng", "Số lượng", "Giá"))
+
+    for item in found:
+        print("{:<10} {:<20} {:<10} {:<10}".format(
+            item["id"],
+            item["name"],
+            item["quantity"],
+            item["price"]
+        ))
+
+
+# ===== SORT ITEMS =====
 
 def sort_items(items):
-    items.sort()
-    print("Đã sắp xếp!")
+    if not items:
+        print("Không có dữ liệu để sắp xếp!")
+        return
+
+    items.sort(key=lambda item: item["quantity"])
+    print("Đã sắp xếp theo số lượng!")
+
+
+# ===== STATISTICS =====
 
 def statistics(items):
-    print(f"Tổng số mặt hàng: {len(items)}")
+    if not items:
+        print("Kho trống!")
+        return
+
+    total_quantity = 0
+    total_value = 0
+
+    for item in items:
+        total_quantity += item["quantity"]
+        total_value += item["quantity"] * item["price"]
+
+    print("\nThống kê kho:")
+    print("Tổng số mặt hàng:", len(items))
+    print("Tổng số lượng hàng:", total_quantity)
+    print("Tổng giá trị hàng tồn kho:", total_value)
+
+
+# ===== SAVE TO FILE =====
 
 def save_to_file(items):
     with open("data.txt", "w", encoding="utf-8") as f:
         for item in items:
-            f.write(item + "\n")
-    print("Đã lưu vào file!")
-
-def load_from_file(items):
-    items = []
-    try:
-        with open("data.txt", "r", encoding="utf-8") as f:
-            items = [line.strip() for line in f]
-        print("Đã tải dữ liệu!")
-    except FileNotFoundError:
-        print("Chưa có file dữ liệu!")
-
-    return items
-
-# ===== MENU =====
-
-def menu():
-    while True:
-        print("WAREHOUSE MANAGEMENT")
-        print("1. Add item")
-        print("2. Display items")
-        print("3. Search item")
-        print("4. Sort items")
-        print("5. Statistics")
-        print("6. Save to file")
-        print("7. Load from file")
-        print("0. Exit")
-
-        choice = input("Chọn: ")
-
-        if choice == "1":
-            add_item()
-        elif choice == "2":
-            display_items()
-        elif choice == "3":
-            search_item()
-        elif choice == "4":
-            sort_items()
-        elif choice == "5":
-            statistics()
-        elif choice == "6":
-            save_to_file()
-        elif choice == "7":
-            load_from_file()
-        elif choice == "0":
-            print("Thoát chương trình")
-            break
-        else:
-            print("Lựa chọn không hợp lệ!")
-
-# ===== RUN =====
-
-# ===== ADD ITEM =====
-def add_item(items):
-    id = input("Enter ID: ")
-    name = input("Enter name: ")
-
-while True:
-    try:
-        quantity = int(input("Enter quantity: "))
-        if quantity >= 0:
-            break
-        else:
-            print("Quantity must >= 0")
-    except:
-        print("Please enter a valid number")
-
-    while True:
-        try:
-            price = float(input("Enter price: "))
-            if price >= 0:
-                break
-            else:
-                print("Price must >= 0")
-        except:
-            print("Invalid number!")
-
-    items.append({
-        "id": id,
-        "name": name,
-        "quantity": quantity,
-        "price": price
-    })
-
-
-# ===== DISPLAY =====
-def display_items(items):
-    if not items:
-        print("No data!")
-        return
-
-    print("{:<10} {:<20} {:<10} {:<10}".format("ID", "Name", "Qty", "Price"))
-
-    for item in items:
-        print("{:<10} {:<20} {:<10} {:<10}".format(
-            item["id"], item["name"], item["quantity"], item["price"]
-        ))
-
-
-# ===== SEARCH =====
-def search_item(items):
-    key = input("Enter ID to search: ")
-
-    for item in items:
-        if item["id"] == key:
-            print("Found:", item)
-            return
-
-    print("Not found!")
-
-
-# ===== SORT =====
-def sort_items(items):
-    if not items:
-        print("No data to sort!")
-        return
-
-    items.sort(key=lambda x: x["quantity"])
-    print("Sorted by quantity!")
-
-
-# ===== STATISTICS =====
-def statistics(items):
-    if not items:
-        print("No data!")
-        return
-
-    total_value = 0
-    total_quantity = 0
-
-    for item in items:
-        total_value += item["quantity"] * item["price"]
-        total_quantity += item["quantity"]
-
-    print("Total quantity:", total_quantity)
-    print("Total inventory value:", total_value)
-
-
-# ===== SAVE FILE =====
-def save_to_file(items):
-    with open("data.txt", "w") as f:
-        for item in items:
             f.write(f"{item['id']},{item['name']},{item['quantity']},{item['price']}\n")
 
-    print("Saved to file!")
+    print("Đã lưu dữ liệu vào file!")
 
 
-# ===== LOAD FILE =====
-def load_from_file():
+# ===== LOAD FROM FILE =====
+
+def load_from_file(items):
     try:
         with open("data.txt", "r", encoding="utf-8") as f:
             items.clear()
+
             for line in f:
-                id, name, quantity, price = line.strip().split(",")
-                items.append({
-                    "id": id,
+                item_id, name, quantity, price = line.strip().split(",")
+
+                item = {
+                    "id": item_id,
                     "name": name,
                     "quantity": int(quantity),
                     "price": float(price)
-                })
-        print("Đã tải dữ liệu!")
+                }
+
+                items.append(item)
+
+        print("Đã tải dữ liệu từ file!")
+
     except FileNotFoundError:
-        print("Không tìm thấy file!")
+        print("Chưa có file dữ liệu!")
+
+    except ValueError:
+        print("File dữ liệu bị sai định dạng!")
+
+
 # ===== MENU =====
 
 def menu():
     while True:
-        print("\ WAREHOUSE MANAGEMENT ")
+        print("\n===== WAREHOUSE MANAGEMENT =====")
         print("1. Add item")
         print("2. Display items")
         print("3. Search item")
@@ -216,25 +169,27 @@ def menu():
         choice = input("Chọn: ")
 
         if choice == "1":
-            add_item()
+            add_item(items)
         elif choice == "2":
-            display_items()
+            display_items(items)
         elif choice == "3":
-            search_item()
+            search_item(items)
         elif choice == "4":
-            sort_items()
+            sort_items(items)
         elif choice == "5":
-            statistics()
+            statistics(items)
         elif choice == "6":
-            save_to_file()
+            save_to_file(items)
         elif choice == "7":
-            load_from_file()
+            load_from_file(items)
         elif choice == "0":
             print("Thoát chương trình")
             break
         else:
             print("Lựa chọn không hợp lệ!")
 
+
 # ===== RUN =====
 
-
+if __name__ == "__main__":
+    menu()
